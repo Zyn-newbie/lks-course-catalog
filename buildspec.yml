@@ -10,18 +10,23 @@ phases:
   install:
     runtime-versions:
       nodejs: 16
-      nodejs: 20
   pre_build:
     commands:
       - echo "Install Dependencies and login into ECR"
+      - npm install
+      - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $ECR_REPO
   build:
     commands:
       - echo "Run unit testing and build docker image"
+      - npm run test
+      - docker build -t $CONTAINER_NAME .
   post_build:
     commands:
       - echo "push the image to ECR.."
+      - docker tag $CONTAINER_NAME:latest $ECR_REPO:latest
+      - docker push $ECR_REPO:latest
       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME ${ECR_REPO}:latest > imagedefinitions.json
-      - echo "build complete.."
+      - echo "Build complete"
 
 reports:
   test-report:
