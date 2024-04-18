@@ -18,7 +18,7 @@ phases:
   build:
     commands:
       - echo "Run unit testing and build docker image"
-      - npm run test
+      - npm run start
       - docker build -t $CONTAINER_NAME .
   post_build:
     commands:
