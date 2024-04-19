@@ -16,7 +16,8 @@ phases:
       - npm install
       - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $ECR_REPO
       - echo "Set up Docker permissions"
-      - sudo service docker start
+      - sudo systemctl start docker
+
   build:
     commands:
       - echo "Run unit testing and build docker image"
